@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import type { PokemonDetails } from "../types/Pokemon";
 import { getTypeBackground, getTypeBadgeColor } from "../utils/getTypeColor";
+import AnimatedBackground from "../components/AnimatedBackground";
 
 export default function Details() {
     const { name } = useParams();
@@ -28,11 +29,11 @@ export default function Details() {
     const mainType = pokemon.types[0]?.type.name || "normal";
     return (
         <div
-            className={`min-h-screen bg-gradient-to-br ${getTypeBackground(
+            className={`relative min-h-screen bg-gradient-to-br ${getTypeBackground(
                 mainType
-            )} p-6 transition-all duration-500`}
+            )} p-6 overflow-hidden`}
         >
-            <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl p-8 text-center">
+            <div className="relative z-[5] max-w-2xl mx-auto bg-white/80 backdrop-blur-md rounded-3xl shadow-xl p-8 text-center">
                 <img
                     src={
                         pokemon.sprites.other["official-artwork"].front_default
@@ -97,12 +98,13 @@ export default function Details() {
                 </div>
 
                 <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate("/")}
                     className="mt-8 px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
                 >
                     Voltar
                 </button>
             </div>
+            <AnimatedBackground type={mainType} />
         </div>
     );
 }
