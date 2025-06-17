@@ -4,11 +4,13 @@ import api from "../services/api";
 import type { PokemonDetails } from "../types/Pokemon";
 import { getTypeBackground, getTypeBadgeColor } from "../utils/getTypeColor";
 import AnimatedBackground from "../components/AnimatedBackground";
+import { useFavorites } from "../hooks/useFavorites";
 
 export default function Details() {
     const { name } = useParams();
     const navigate = useNavigate();
     const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
+    const { isFavorite, toggleFavorite } = useFavorites();
 
     useEffect(() => {
         async function fetchPokemon() {
@@ -26,26 +28,38 @@ export default function Details() {
     if (!pokemon) {
         return <p className="text-center mt-10 text-blue-600">Carregando...</p>;
     }
+
     const mainType = pokemon.types[0]?.type.name || "normal";
+
     return (
         <div
             className={`relative min-h-screen bg-gradient-to-br ${getTypeBackground(
                 mainType
             )} p-6 overflow-hidden`}
         >
-            <div className="relative z-[5] max-w-2xl mx-auto bg-white/80 backdrop-blur-md rounded-3xl shadow-xl p-8 text-center">
+            <AnimatedBackground type={mainType} />
+
+            <div className="relative z-10 max-w-2xl mx-auto bg-white/80 backdrop-blur-md rounded-3xl shadow-xl p-8 text-center">
+                <button
+                    onClick={() => toggleFavorite(pokemon.name)}
+                    className="absolute top-4 right-4 text-2xl text-red-500 hover:scale-110 transition"
+                    aria-label="Favoritar"
+                >
+                    {isFavorite(pokemon.name) ? "♥" : "♡"}
+                </button>
+
                 <img
                     src={
                         pokemon.sprites.other["official-artwork"].front_default
                     }
                     alt={pokemon.name}
-                    className="w-48 h-48 mx-auto mb-4"
+                    className="w-48 h-48 mx-auto mb-4 drop-shadow-lg"
                 />
                 <h1 className="text-3xl font-bold capitalize text-gray-800 mb-4">
                     {pokemon.name}
                 </h1>
 
-                <div className="flex justify-center gap-3 mb-6">
+                <div className="flex justify-center gap-3 mb-6 flex-wrap">
                     {pokemon.types.map((t) => (
                         <span
                             key={t.type.name}
@@ -98,13 +112,12 @@ export default function Details() {
                 </div>
 
                 <button
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate(-1)}
                     className="mt-8 px-6 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
                 >
                     Voltar
                 </button>
             </div>
-            <AnimatedBackground type={mainType} />
         </div>
     );
 }
