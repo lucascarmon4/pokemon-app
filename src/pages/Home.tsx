@@ -56,31 +56,34 @@ export default function Home() {
                 <p className="text-center text-blue-600">Carregando...</p>
             ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-6 max-w-7xl mx-auto">
-                    {pokemonList.map((pokemon) => (
-                        <div
-                            key={pokemon.name}
-                            onClick={() => navigate(`/pokemon/${pokemon.name}`)}
-                            className="relative bg-white border border-gray-200 shadow-lg rounded-2xl p-4 flex flex-col items-center cursor-pointer hover:shadow-2xl transition-transform hover:-translate-y-1"
-                        >
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleFavorite(pokemon.name);
-                                }}
-                                className="absolute top-2 right-2 text-red-500 text-xl hover:scale-110 transition"
+                    {pokemonList &&
+                        pokemonList.map((pokemon) => (
+                            <div
+                                key={pokemon.name}
+                                onClick={() =>
+                                    navigate(`/pokemon/${pokemon.name}`)
+                                }
+                                className="relative bg-white border border-gray-200 shadow-lg rounded-2xl p-4 flex flex-col items-center cursor-pointer hover:shadow-2xl transition-transform hover:-translate-y-1"
                             >
-                                {isFavorite(pokemon.name) ? "♥" : "♡"}
-                            </button>
-                            <img
-                                src={getPokemonImage(pokemon.url)}
-                                alt={pokemon.name}
-                                className="w-24 h-24 mb-2"
-                            />
-                            <span className="capitalize text-lg font-semibold text-gray-700">
-                                {pokemon.name}
-                            </span>
-                        </div>
-                    ))}
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleFavorite(pokemon.name);
+                                    }}
+                                    className="absolute top-2 right-2 text-red-500 text-xl hover:scale-110 transition"
+                                >
+                                    {isFavorite(pokemon.name) ? "♥" : "♡"}
+                                </button>
+                                <img
+                                    src={getPokemonImage(pokemon.url)}
+                                    alt={pokemon.name}
+                                    className="w-24 h-24 mb-2"
+                                />
+                                <span className="capitalize text-lg font-semibold text-gray-700">
+                                    {pokemon.name}
+                                </span>
+                            </div>
+                        ))}
                 </div>
             )}
 
